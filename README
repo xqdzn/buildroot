@@ -1,26 +1,46 @@
-Buildroot is a simple, efficient and easy-to-use tool to generate embedded
-Linux systems through cross-compilation.
+Intro
+=====
 
-The documentation can be found in docs/manual. You can generate a text
-document with 'make manual-text' and read output/docs/manual/manual.text.
-Online documentation can be found at http://buildroot.org/docs.html
+This default configuration will allow you to start experimenting with the
+buildroot environment for the Bananapi P2 Zero. With the current
+configuration it will bring-up the board, and allow access through the
+serial console.
 
-To build and use the buildroot stuff, do the following:
+Bananapi P2 Zero link:
+http://www.banana-pi.org/m2pz.html
 
-1) run 'make menuconfig'
-2) select the target architecture and the packages you wish to compile
-3) run 'make'
-4) wait while it compiles
-5) find the kernel, bootloader, root filesystem, etc. in output/images
+This configuration uses U-Boot mainline and kernel mainline.
 
-You do not need to be root to build or run buildroot.  Have fun!
+How to build
+============
 
-Buildroot comes with a basic configuration for a number of boards. Run
-'make list-defconfigs' to view the list of provided configurations.
+    ```$ make bananapi_p2_zero_defconfig
+    $ make```
 
-Please feed suggestions, bug reports, insults, and bribes back to the
-buildroot mailing list: buildroot@buildroot.org
-You can also find us on #buildroot on Freenode IRC.
+Note: you will need access to the internet to download the required
+sources.
 
-If you would like to contribute patches, please read
-https://buildroot.org/manual.html#submitting-patches
+How to write the SD card
+========================
+
+Once the build process is finished you will have an image called "sdcard.img"
+in the output/images/ directory.
+
+Copy the bootable "sdcard.img" onto an SD card with "dd":
+
+  $ sudo dd if=output/images/sdcard.img of=/dev/sdX
+  $ sudo sync
+
+Insert the micro SDcard in your Bananapi P2 Zero and power it up. The console
+is on the serial line, ```115200 8N1```.
+
+How to test WiFi 
+==================
+
+Wireless driver is not enabled by default, in order to use WiFi, you have to 
+enable brcmfmac and connect to a network using iw:
+```
+modprobe brcmfmac
+```
+
+You will see ```wlan0``` listed in ```ip link```
